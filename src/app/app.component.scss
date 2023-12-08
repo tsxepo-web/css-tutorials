@@ -1,106 +1,183 @@
-@import url('https://fonts.googleapis.com/css2?family=Josefin+Slab:wght@500&display=swap');
+$gap: 4vh;
+$padding: 4vh;
+$color: #777;
+$dark-grey: #333333;
+$black: black;
+$medium-grey: #636363;
+$light-grey: #eeeeee;
+$ash: #f4f4f4;
+$primary-color: #2b72fb;
+$white: white;
+$border: 1px solid var($light-grey);
+$fontsize: clamp(0.5rem, 4vw + 2em, 0.9rem);
+$shadow: rgba(0, 0, 0, 0.05) 0px 6px 24px 0px,
+  rgba(0, 0, 0, 0.08) 0px 0px 0px 1px;
 
-:root {
-    --radius: 5px
-    --padding: 10px
+$bp: (
+  mobile: 480px,
+  tablet: 786px,
+  desktop: 1440px,
+);
+
+@mixin query($display) {
+  @each $key, $value in $bp {
+    @if ($display == $key) {
+      @media (max-width: $value) {
+        @content;
+      }
+    }
+  }
 }
 
 .container {
-    text-transform: uppercase;
-    font-family: "Josefin Slab", serif;
-    text-align: center;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: 0.2fr 1.5fr 1.2fr 0.4fr;
+  background: $white;
+  height: 100vh;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $padding;
+  gap: 1rem;
+  background: $white;
+  .left {
+    display: flex;
+    align-items: center;
     gap: 1rem;
-    height: 100vh;
-    grid-template-areas: 
-        "navbar navbar navbar "
-        "main main sidebar"
-        "content1 content2 sidebar"
-        "content3 content4 content5";
-}
-nav {
-    background-color: brown;
-    grid-area: navbar;
-}
-
-main {
-    grid-area: main;
-
-}
-
-main img {
-    width: 100%;
-    height: 100%;
-   }
-.sidebar {
-    background-color: hsl(240, 100%, 5%);
-    color: hsl(36, 100%, 99%);
-    grid-area: sidebar;
-}
-.sidebar h1 {
-    color: hsl(35, 77%, 62%);
-}
-.content1 {
-    grid-area: content1;
-}
-.content2 {
-    grid-area: content2;
-
-}
-
-.content3 {
-    background-color: rgb(69, 41, 41);
-    grid-area: content3;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    max-height: 50%;
-}
-
-.content4 {
-    background-color: rgb(255, 51, 0);
-    grid-area: content4;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    max-height: 50%;
-}
-.content5 {
-    background-color: #cc0d0d;
-    grid-area: content5;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    max-height: 50%;
-}
-
-.content-image img {
-    width: 100%;
-    height: 50%;
-}
-.card-content {
-    grid-column: 2/-1;
-}
-
-.card-content p {
-    font-size: 0.5rem;
-    color: black;
-    margin-top: 5px;
-}
-
-
-@media only screen and (max-width:550px) {
-    .container {
-        grid-template-columns: 1fr;
-        grid-template-rows: 0.4fr 2.2fr 1.2fr 1.2fr 2.2fr 1.2fr 1.2fr 1.2fr;
-        grid-template-areas: 
-        "navbar"
-        "main"
-        "content1"
-        "content2"
-        "sidebar"
-        "content3"
-        "content4"
-        "content5"
-        ;
+    .lis {
+      color: $color;
+      font-size: $fontsize;
     }
+    .logo {
+      width: 25%;
+    }
+  }
+  .right {
+    display: flex;
+    align-items: center;
+    gap: $gap;
+    padding-right: 8rem;
+    max-width: 100px;
+  }
+  .dropdown {
+    position: relative;
+  }
+  .dropdown-menu1 {
+    position: absolute;
+    width: 6.5rem;
+    left: -40px;
+    top: calc(100% + 0.5rem);
+    background-color: $white;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    box-shadow: $shadow;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-1px);
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  }
+  .dropdown-menu2 {
+    position: absolute;
+    width: 6.3rem;
+    left: 0px;
+    top: calc(100% + 0.5rem);
+    background-color: $white;
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    box-shadow: $shadow;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(-1px);
+    transition: opacity 150ms ease-in-out, transform 150ms ease-in-out;
+  }
+  .dropdown.active > .link + .dropdown-menu1 {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .dropdown.active > .link + .dropdown-menu2 {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+  .dropdown-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    font-size: 0.9rem;
+    img {
+      padding-right: 4px;
+      width: 0.9rem;
+    }
+  }
+  .link {
+    color: $color;
+    font-size: $fontsize;
+  }
+  .dropdown.active > .link,
+  .lis:hover,
+  .link:hover {
+    color: black;
+  }
+  .btn {
+    border: 1px solid;
+    border-radius: 10px;
+    padding: 0.4rem;
+    background: $white;
+  }
+  .icon {
+    width: 10px;
+  }
+}
+.hero {
+  display: flex;
+  gap: 1rem;
+  height: 60%;
+  padding: 0 12%;
+}
+.hero-content {
+  display: flex;
+  flex-direction: column;
+  padding-top: 4.5rem;
+  gap: 1rem;
+  width: 50%;
+  h1 {
+    font-size: clamp(2em, 2vw + 1rem, 4em);
+    font-weight: 700;
+    color: black;
+  }
+  p {
+    font-size: clamp(0.5em, 1vw + 0.5rem, 1.13em);
+    color: $black;
+    font-weight: 500;
+  }
+  button {
+    align-self: start;
+    padding: 0.8rem;
+    font-size: 1.2rem;
+    border: 1px solid black;
+    border-radius: 10px;
+  }
+}
+.hero-image {
+  width: 50%;
+
+  img {
+    object-fit: contain;
+  }
+}
+
+.svgs {
+  display: flex;
+  align-self: flex-start;
+  // width: auto;
+  height: 100%;
+  gap: clamp(5px, 8vw + 1rem, 0.5rem);
+  img {
+    object-fit: contain;
+    width: clamp(40px, 4vw + 1rem, 200px);
+    height: 40%;
+    align-self: flex-end;
+  }
 }
