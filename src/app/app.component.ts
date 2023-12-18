@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from '@angular/core';
+import { Component, ElementRef, HostListener, Input } from '@angular/core';
 
 @Component({
   selector: 'app-root',
@@ -7,45 +7,38 @@ import { Component, ElementRef, HostListener } from '@angular/core';
 })
 export class AppComponent {
   title = 'test-css';
-  isDropdownOpen = false;
+  activeDropdownId: string = '';
+  isActive: { [key: string]: boolean } = {};
 
-  constructor(private el: ElementRef) {}
+  constructor(private elementRef: ElementRef) {}
 
   @HostListener('document:click', ['$event'])
-  handleDocumentClick(event: Event) {
-    const isDropdownButton = (event.target as HTMLElement).matches(
-      '[data-dropdown-button]'
-    );
-
-    if (
-      !isDropdownButton &&
-      (event.target as HTMLElement).closest('[data-dropdown]') !== null
-    ) {
-      return;
+  onClickOutside(event: Event) {
+    const target = event.target as HTMLElement;
+    if (!this.elementRef.nativeElement.contains(target)) {
+      this.closeDropdown();
     }
-
-    let currentDropdown: HTMLElement | null;
-
-    if (isDropdownButton) {
-      currentDropdown = (event.target as HTMLElement).closest(
-        '[data-dropdown]'
-      );
-      currentDropdown!.classList.toggle('active');
-      this.isDropdownOpen = currentDropdown!.classList.contains('active');
-    }
-
-    document
-      .querySelectorAll('[data-dropdown].active')
-      .forEach((dropdown: any) => {
-        if (dropdown === currentDropdown) return;
-        dropdown.classList.remove('active');
-      });
   }
 
-  toggleDropdown() {
-    const dropdownElement =
-      this.el.nativeElement.querySelector('[data-dropdown]');
-    dropdownElement.classList.toggle('active');
-    this.isDropdownOpen = dropdownElement.classList.contains('active');
+  @HostListener('document:keydown.escape', ['$event'])
+  onEscPressed(event: Event) {
+    this.closeDropdown();
+  }
+
+  toggleDropdown(dropdownId: string) {
+    Object.keys(this.isActive).forEach((key) => {
+      if (key !== dropdownId) {
+        this.isActive[key] = false;
+      }
+    });
+    this.isActive[dropdownId] = !this.isActive[dropdownId];
+    this.activeDropdownId = this.isActive[dropdownId] ? dropdownId : '';
+  }
+
+  closeDropdown() {
+    if (this.activeDropdownId) {
+      this.isActive[this.activeDropdownId] = false;
+      this.activeDropdownId = '';
+    }
   }
 }
